@@ -20,5 +20,20 @@ volumes: [
                 sh('npm test')
             }
         }
+
+        stage('Docker work') {
+            container('docker') {
+                withCredentials([[$class: 'UsernamePasswordMultiBinding',
+                    credentialsId: 'acastillo-dockerhub',
+                    usernameVariable: 'DOCKER_HUB_USER',
+                    passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
+                        sh """
+                           docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD}
+                           docker build -t cmptrmn/acastillo-test:cicd-dojo .
+                           docker push cmptrmn/acastillo-test:cicd-dojo
+                           """
+                    }
+            }
+        }
     }
 }
