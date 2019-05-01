@@ -1,6 +1,7 @@
 def label = "worker-${UUID.randomUUID().toString()}"
 
-podTemplate(label: label, containers: [
+podTemplate(label: label,
+containers: [
     containerTemplate(name: 'node', image: 'node:carbon-jessie', command: 'cat', ttyEnabled: true),
     containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
     containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true)
@@ -11,12 +12,12 @@ volumes: [
 
 node(label) {
     stage('Checkout repo') {
-        scm Checkout
+        checkout scm
     }
     stage('Run tests') {
         container('node') {
-            sh "npm install"
-            sh "npm test"
+            sh('npm install')
+            sh('npm test')
         }
     }
 }
