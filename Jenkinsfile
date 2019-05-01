@@ -8,16 +8,17 @@ containers: [
 ],
 volumes: [
     hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')
-])
+]) {
+    node(label) {
+        stage('Checkout repo') {
+            checkout scm
+        }
 
-node(label) {
-    stage('Checkout repo') {
-        checkout scm
-    }
-    stage('Run tests') {
-        container('node') {
-            sh('npm install')
-            sh('npm test')
+        stage('Run tests') {
+            container('node') {
+                sh('npm install')
+                sh('npm test')
+            }
         }
     }
 }
